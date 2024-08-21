@@ -13,6 +13,7 @@
 # limitations under the License.
 
 # Imports
+import sounddevice
 import pyaudio
 import numpy as np
 from openwakeword.model import Model
@@ -38,7 +39,7 @@ parser.add_argument(
     "--inference_framework",
     help="The inference framework to use (either 'onnx' or 'tflite'",
     type=str,
-    default='tflite',
+    default='onnx', # tflite
     required=False
 )
 
@@ -51,7 +52,7 @@ RATE = 16000
 CHUNK = args.chunk_size
 audio = pyaudio.PyAudio()
 mic_stream = audio.open(format=FORMAT, channels=CHANNELS, rate=RATE, input=True, frames_per_buffer=CHUNK)
-
+args.model_path = '/Users/koo/dev/openwakeword/notebooks/colab_model/hey_jay_G.onnx'
 # Load pre-trained openwakeword models
 if args.model_path != "":
     owwModel = Model(wakeword_models=[args.model_path], inference_framework=args.inference_framework)
