@@ -3,8 +3,13 @@ import os
 import sys
 
 if "piper-sample-generator/" not in sys.path:
-    sys.path.append("../piper-sample-generator/")
+    sys.path.append("piper-sample-generator/")
 from generate_samples import generate_samples
+
+import os
+os.environ['NUMEXPR_MAX_THREADS'] = '4'
+os.environ['NUMEXPR_NUM_THREADS'] = '2'
+import numexpr as ne 
 
 import numpy as np
 import torch
@@ -27,12 +32,13 @@ if not os.path.exists(output_dir):
         scipy.io.wavfile.write(os.path.join(output_dir, name), 16000, (row['audio']['array']*32767).astype(np.int16))
 
 if not os.path.exists("audioset"):
-    os.mkdir("audioset")
+    #os.mkdir("audioset")
     
     fname = "bal_train09.tar"
     out_dir = f"audioset/{fname}"
     link = "https://huggingface.co/datasets/agkphysics/AudioSet/resolve/main/data/" + fname
-    #!wget -O out_dir link
+    print("Download it manually!! (if you are not using pynb)")
+    #wget -O out_dir link
     #cd audioset && tar -xvf bal_train09.tar
 
     output_dir = "./audioset_16k"

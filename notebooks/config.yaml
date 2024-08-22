@@ -6,7 +6,7 @@ model_name: "my_model"
 # The target word/phrase to be detected by the model. Adding multiple unique words/phrases will
 # still only train a binary model detection model, but it will activate on any one of the provided words/phrases.
 target_phrase:
-  - "hey jarvis"
+  - "hey Jay G"
 
 # Specific phrases that you do *not* want the model to activate on, outside of those generated automatically via phoneme overlap
 # This can be a good way to reduce false positives if you notice that, in practice, certain words or phrases are problematic
@@ -26,7 +26,7 @@ tts_batch_size: 50
 augmentation_batch_size: 16
 
 # The path to a fork of the piper-sample-generator repository for TTS (https://github.com/dscripka/piper-sample-generator)
-piper_sample_generator_path: "./piper-sample-generator"
+piper_sample_generator_path: "../notebooks/piper-sample-generator"
 
 # The output directory for the generated synthetic clips, openwakeword features, and trained models
 # Sub-directories will be automatically created for train and test clips for both positive and negative examples
@@ -34,7 +34,7 @@ output_dir: "./my_custom_model"
 
 # The directories containing Room Impulse Response recordings
 rir_paths:
-  - "./mit_rirs"
+  - "../notebooks/mit_rirs"
 
 # The directories containing background audio files to mix with training data
 background_paths:
@@ -102,15 +102,16 @@ target_false_positives_per_hour: 0.2
 
 
 #### CUSTOM AREA ####
-target_pharase: 'hey_jay_G'
+target_pharase:
+  - 'hey_jay_G'
 model_name: prototype
-n_samples: 1000
-n_samples_val: 100
-steps: 10000
+n_samples: 1038
+n_samples_val: 145
+steps: 1000 #10000
 target_accuracy: 0.8
-target_recall: 0.8
-output_dir: './my_custom_model'
-max_negative_weight: 1500
-background_paths: ['./audioset_16k', './fma']
+target_recall: 0.7 #8
+output_dir: '../notebooks/hey_KG'
+max_negative_weight: 1000 #1500
+background_paths: ['../notebooks/audioset_16k', '../notebooks/fma']
 false_positive_validation_data_path: validation_set_features.npy
 feature_data_files: {"ACAV100M_sample": "openwakeword_features_ACAV100M_2000_hrs_16bit.npy"}

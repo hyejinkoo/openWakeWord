@@ -36,8 +36,8 @@ class AudioFeatures():
     `speech_embedding` features.
     """
     def __init__(self,
-                 melspec_model_path: str = "",
-                 embedding_model_path: str = "",
+                 melspec_model_path: str = "./resources/models/melspectrogram.onnx",
+                 embedding_model_path: str = "./resources/models/embedding_model.onnx",
                  sr: int = 16000,
                  ncpu: int = 1,
                  inference_framework: str = "onnx",
@@ -67,10 +67,12 @@ class AudioFeatures():
             except ImportError:
                 raise ValueError("Tried to import onnxruntime, but it was not found. Please install it using `pip install onnxruntime`")
 
-            if melspec_model_path == "":
-                melspec_model_path = os.path.join(pathlib.Path(__file__).parent.resolve(), "resources", "models", "melspectrogram.onnx")
-            if embedding_model_path == "":
-                embedding_model_path = os.path.join(pathlib.Path(__file__).parent.resolve(), "resources", "models", "embedding_model.onnx")
+#            if melspec_model_path == "":
+#                melspec_model_path = os.path.join(pathlib.Path(__file__).parent.resolve(), "resources", "models", "melspectrogram.onnx")
+#            if embedding_model_path == "":
+#                embedding_model_path = os.path.join(pathlib.Path(__file__).parent.resolve(), "resources", "models", "embedding_model.onnx")
+            melspec_model_path = "./resources/models/melspectrogram.onnx"
+            embedding_model_path = "./resources/models/embedding_model.onnx"
 
             if ".tflite" in melspec_model_path or ".tflite" in embedding_model_path:
                 raise ValueError("The onnx inference framework is selected, but tflite models were provided!")

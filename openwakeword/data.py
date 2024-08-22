@@ -562,13 +562,13 @@ def augment_clips(
         batch_size: int = 128,
         augmentation_probabilities: dict = {
             "SevenBandParametricEQ": 0.25,
-            "TanhDistortion": 0.25,
-            "PitchShift": 0.25,
-            "BandStopFilter": 0.25,
-            "AddColoredNoise": 0.25,
-            "AddBackgroundNoise": 0.75,
+            "TanhDistortion": 0.6, #0.25,
+            "PitchShift": 0.9, #0.25,
+            "BandStopFilter": 0.5, #, 0.25,
+            "AddColoredNoise": 0.8, ##, 0.25,
+            "AddBackgroundNoise": 0.8, #0.75,
             "Gain": 1.0,
-            "RIR": 0.5
+            "RIR": 0.7, 
         },
         background_clip_paths: List[str] = [],
         RIR_paths: List[str] = []
@@ -626,6 +626,13 @@ def augment_clips(
     # Augmentations that can be done as a batch
     if background_clip_paths != []:
         augment2 = torch_audiomentations.Compose([
+            torch_audiomentations.Shift(
+                min_shift=-2000,
+                max_shift=2000,
+                shift_unit='samples',
+                p=1.0,
+                rollover=False,
+            ),
             torch_audiomentations.PitchShift(
                 min_transpose_semitones=-3,
                 max_transpose_semitones=3,
@@ -672,6 +679,13 @@ def augment_clips(
         augmented_clips = []
         for clip in batch:
             clip_data, clip_sr = torchaudio.load(clip)
+#            speed = random.uniform(0.8, 1.2)
+#            clip_data, _ = torchaudio.sox_effects.apply_effects_tensor(
+#                clip_data[0], clip_sr,
+#                [['speed', str(speed)], ['rate', str(clip_sr)]]
+#            )
+#            pad = torch.zeros(1,2000)
+#            clip_data = torch.cat([pad,clip_data,pad], dim=-1) ## add - padding for time shift later
             clip_data = clip_data[0]
             if clip_data.shape[0] > total_length:
                 clip_data = clip_data[0:total_length]

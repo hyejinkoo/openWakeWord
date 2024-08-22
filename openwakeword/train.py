@@ -21,6 +21,9 @@ from openwakeword.utils import compute_features_from_generator
 from openwakeword.utils import AudioFeatures
 
 
+os.environ['NUMEXPR_MAX_THREADS'] = '8' #'4'
+os.environ['NUMEXPR_NUM_THREADS'] = '4' #'2'
+
 # Base model class for an openwakeword model
 class Model(nn.Module):
     def __init__(self, n_classes=1, input_shape=(16, 96), model_type="dnn",
@@ -292,36 +295,36 @@ class Model(nn.Module):
             max_negative_weight = max_negative_weight*2
             logging.info("Increasing weight on negative examples to reduce false positives...")
 
-        weights = np.linspace(1, max_negative_weight, int(steps)).tolist()
-        val_steps = np.linspace(1, steps, 20).astype(np.int16)
-        self.train_model(
-                    X=X_train,
-                    X_val=X_val,
-                    false_positive_val_data=false_positive_val_data,
-                    max_steps=steps,
-                    negative_weight_schedule=weights,
-                    val_steps=val_steps, warmup_steps=steps//5,
-                    hold_steps=steps//3, lr=lr, val_set_hrs=val_set_hrs)
+#        weights = np.linspace(1, max_negative_weight, int(steps)).tolist()
+#        val_steps = np.linspace(1, steps, 20).astype(np.int16)
+#        self.train_model(
+#                    X=X_train,
+#                    X_val=X_val,
+#                    false_positive_val_data=false_positive_val_data,
+#                    max_steps=steps,
+#                    negative_weight_schedule=weights,
+#                    val_steps=val_steps, warmup_steps=steps//5,
+#                    hold_steps=steps//3, lr=lr, val_set_hrs=val_set_hrs)
 
         # Sequence 3
         logging.info("#"*50 + "\nStarting training sequence 3...\n" + "#"*50)
         lr = lr/10
 
-        # Adjust weights as needed based on false positive per hour performance from second sequence
-        if self.best_val_fp > target_fp_per_hour:
-            max_negative_weight = max_negative_weight*2
-            logging.info("Increasing weight on negative examples to reduce false positives...")
-
-        weights = np.linspace(1, max_negative_weight, int(steps)).tolist()
-        val_steps = np.linspace(1, steps, 20).astype(np.int16)
-        self.train_model(
-                    X=X_train,
-                    X_val=X_val,
-                    false_positive_val_data=false_positive_val_data,
-                    max_steps=steps,
-                    negative_weight_schedule=weights,
-                    val_steps=val_steps, warmup_steps=steps//5,
-                    hold_steps=steps//3, lr=lr, val_set_hrs=val_set_hrs)
+#        # Adjust weights as needed based on false positive per hour performance from second sequence
+#        if self.best_val_fp > target_fp_per_hour:
+#            max_negative_weight = max_negative_weight*2
+#            logging.info("Increasing weight on negative examples to reduce false positives...")
+#
+#        weights = np.linspace(1, max_negative_weight, int(steps)).tolist()
+#        val_steps = np.linspace(1, steps, 20).astype(np.int16)
+#        self.train_model(
+#                    X=X_train,
+#                    X_val=X_val,
+#                    false_positive_val_data=false_positive_val_data,
+#                    max_steps=steps,
+#                    negative_weight_schedule=weights,
+#                    val_steps=val_steps, warmup_steps=steps//5,
+#                    hold_steps=steps//3, lr=lr, val_set_hrs=val_set_hrs)
 
         # Merge best models
         logging.info("Merging checkpoints above the 90th percentile into single model...")
