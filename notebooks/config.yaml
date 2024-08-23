@@ -78,7 +78,7 @@ feature_data_files:
 
 batch_n_per_class:
   "ACAV100M_sample": 1024
-  "adversarial_negative": 50
+  "adversarial_negative": 150
   "positive": 50
 
 # Define the type of size of the openwakeword model to train. Increasing the layer size
@@ -98,20 +98,22 @@ steps: 50000
 # The maximum negative weight and target false positives per hour, used to control the auto training process
 # The target false positive rate may not be achieved, and adjusting the maximum negative weight may be necessary
 max_negative_weight: 1500
-target_false_positives_per_hour: 0.2
+target_false_positives_per_hour: 1.2 #11.2
 
 
 #### CUSTOM AREA ####
 target_pharase:
-  - 'hey_jay_G'
-model_name: prototype
-n_samples: 1038
-n_samples_val: 145
-steps: 1000 #10000
+  - 'hey_KG'
+model_name: KGshell
+n_samples: 15000 #7360 #1038
+n_samples_val: 290
+steps: 10000 #10000
 target_accuracy: 0.8
 target_recall: 0.7 #8
-output_dir: '../notebooks/hey_KG'
+output_dir: '../../hey_KG'
 max_negative_weight: 1000 #1500
-background_paths: ['../notebooks/audioset_16k', '../notebooks/fma']
-false_positive_validation_data_path: validation_set_features.npy
+background_paths: ['../../audioset_16k', '../../fma']
+rir_paths:
+ - "../../mit_rirs" 
+false_positive_validation_data_path: valid_own.npy #validation_set_features.npy
 feature_data_files: {"ACAV100M_sample": "openwakeword_features_ACAV100M_2000_hrs_16bit.npy"}

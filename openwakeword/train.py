@@ -295,36 +295,36 @@ class Model(nn.Module):
             max_negative_weight = max_negative_weight*2
             logging.info("Increasing weight on negative examples to reduce false positives...")
 
-#        weights = np.linspace(1, max_negative_weight, int(steps)).tolist()
-#        val_steps = np.linspace(1, steps, 20).astype(np.int16)
-#        self.train_model(
-#                    X=X_train,
-#                    X_val=X_val,
-#                    false_positive_val_data=false_positive_val_data,
-#                    max_steps=steps,
-#                    negative_weight_schedule=weights,
-#                    val_steps=val_steps, warmup_steps=steps//5,
-#                    hold_steps=steps//3, lr=lr, val_set_hrs=val_set_hrs)
+        weights = np.linspace(1, max_negative_weight, int(steps)).tolist()
+        val_steps = np.linspace(1, steps, 20).astype(np.int16)
+        self.train_model(
+                    X=X_train,
+                    X_val=X_val,
+                    false_positive_val_data=false_positive_val_data,
+                    max_steps=steps,
+                    negative_weight_schedule=weights,
+                    val_steps=val_steps, warmup_steps=steps//5,
+                    hold_steps=steps//3, lr=lr, val_set_hrs=val_set_hrs)
 
         # Sequence 3
         logging.info("#"*50 + "\nStarting training sequence 3...\n" + "#"*50)
         lr = lr/10
 
-#        # Adjust weights as needed based on false positive per hour performance from second sequence
-#        if self.best_val_fp > target_fp_per_hour:
-#            max_negative_weight = max_negative_weight*2
-#            logging.info("Increasing weight on negative examples to reduce false positives...")
-#
-#        weights = np.linspace(1, max_negative_weight, int(steps)).tolist()
-#        val_steps = np.linspace(1, steps, 20).astype(np.int16)
-#        self.train_model(
-#                    X=X_train,
-#                    X_val=X_val,
-#                    false_positive_val_data=false_positive_val_data,
-#                    max_steps=steps,
-#                    negative_weight_schedule=weights,
-#                    val_steps=val_steps, warmup_steps=steps//5,
-#                    hold_steps=steps//3, lr=lr, val_set_hrs=val_set_hrs)
+        # Adjust weights as needed based on false positive per hour performance from second sequence
+        if self.best_val_fp > target_fp_per_hour:
+            max_negative_weight = max_negative_weight*2
+            logging.info("Increasing weight on negative examples to reduce false positives...")
+
+        weights = np.linspace(1, max_negative_weight, int(steps)).tolist()
+        val_steps = np.linspace(1, steps, 20).astype(np.int16)
+        self.train_model(
+                    X=X_train,
+                    X_val=X_val,
+                    false_positive_val_data=false_positive_val_data,
+                    max_steps=steps,
+                    negative_weight_schedule=weights,
+                    val_steps=val_steps, warmup_steps=steps//5,
+                    hold_steps=steps//3, lr=lr, val_set_hrs=val_set_hrs)
 
         # Merge best models
         logging.info("Merging checkpoints above the 90th percentile into single model...")
@@ -638,8 +638,8 @@ if __name__ == '__main__':
     config = yaml.load(open(args.training_config, 'r').read(), yaml.Loader)
 
     # imports Piper for synthetic sample generation
-    sys.path.insert(0, os.path.abspath(config["piper_sample_generator_path"]))
-    from generate_samples import generate_samples
+    # sys.path.insert(0, os.path.abspath(config["piper_sample_generator_path"]))
+    # from generate_samples import generate_samples
 
     # Define output locations
     config["output_dir"] = os.path.abspath(config["output_dir"])
@@ -786,7 +786,7 @@ if __name__ == '__main__':
             if n_cpus is None:
                 n_cpus = 1
             else:
-                n_cpus = n_cpus//2
+                n_cpus = n_cpus //2
             compute_features_from_generator(positive_clips_train_generator, n_total=len(os.listdir(positive_train_output_dir)),
                                             clip_duration=config["total_length"],
                                             output_file=os.path.join(feature_save_dir, "positive_features_train.npy"),
@@ -868,6 +868,7 @@ if __name__ == '__main__':
                                               batch_size=None, num_workers=n_cpus, prefetch_factor=16)
 
         X_val_fp = np.load(config["false_positive_validation_data_path"])
+        X_val_fp = X_val_fp.reshape(-1, X_val_fp.shape[-1])
         X_val_fp = np.array([X_val_fp[i:i+input_shape[0]] for i in range(0, X_val_fp.shape[0]-input_shape[0], 1)])  # reshape to match model
         X_val_fp_labels = np.zeros(X_val_fp.shape[0]).astype(np.float32)
         X_val_fp = torch.utils.data.DataLoader(
