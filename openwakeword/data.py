@@ -634,7 +634,7 @@ def augment_clips(
                 rollover=False,
             ),
             torch_audiomentations.PitchShift(
-                min_transpose_semitones=-3,
+                min_transpose_semitones=-5,
                 max_transpose_semitones=3,
                 p=augmentation_probabilities["PitchShift"],
                 sample_rate=16000,
@@ -658,7 +658,7 @@ def augment_clips(
     else:
         augment2 = torch_audiomentations.Compose([
             torch_audiomentations.PitchShift(
-                min_transpose_semitones=-3,
+                min_transpose_semitones=-5,
                 max_transpose_semitones=3,
                 p=augmentation_probabilities["PitchShift"],
                 sample_rate=16000,
